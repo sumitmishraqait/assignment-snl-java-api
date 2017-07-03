@@ -139,4 +139,32 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 			assertThat(msg.toString()).isEqualTo("Incorrect roll of dice. Player did not move");
 }
 	}
+	 @Test
+	   public void rollDice() throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException, MaxPlayersReachedExeption, IOException, JSONException, InvalidTurnException {
+	  	  
+	   	 UUID u = (UUID) board.getData().getJSONArray("players").getJSONObject(0).get("uuid");
+	      Integer pos = (Integer) board.data.getJSONArray("players").getJSONObject(0).get("position");
+	      Integer dice = board.rollDice(u).getInt("dice");
+	      Integer pos_a = board.data.getJSONArray("players").getJSONObject(0).getInt("position");
+	      Integer pos_e = pos+dice;
+	      Integer target = (Integer) board.data.getJSONArray("steps").getJSONObject(dice).get("target");
+	   assertTrue(dice<=6);
+	     Integer type = (Integer) board.data.getJSONArray("steps").getJSONObject(dice).get("type");
+	     if(type==0)
+	 	  {
+	 		 assertEquals(pos_e, target);
+	 		  System.out.println(" nothing");
+	 	  }
+	 	  if(type==1)
+	 	  {
+	 		  assertTrue(pos_e>target);
+	 	  }
+	 	  if(type==2)
+	 	  {
+	 		 assertTrue(pos_e<target);
+	 	  
+		
+	 }
+
+}
 }
