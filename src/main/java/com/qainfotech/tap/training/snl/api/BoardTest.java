@@ -63,6 +63,7 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 		assertNotEquals(data1,data2);
 		
 	}
+	@Test
 	public void Player_Deleted()
 			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
 			MaxPlayersReachedExeption, IOException, NoUserWithSuchUUIDException, InvalidTurnException 
