@@ -79,7 +79,7 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 			MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException
 {
 
-		board.rollDice((UUID) ((JSONObject) board.getData().getJSONArray("players").get(3)).get("uuid"));
+		board.rollDice(UUID.randomUUID());
 
 	}
 @Test
@@ -98,4 +98,44 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 		int h = (int) finalPosition;
 		((JSONObject) board.getData().getJSONArray("steps").get(h)).getInt("type");
 }
+	
+@Test
+	public void players_Turn()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+		MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException {
+		board.rollDice((UUID) ((JSONObject) board.getData().getJSONArray("players").get(0)).get("uuid"));
+		board.rollDice((UUID) ((JSONObject) board.getData().getJSONArray("players").get(1)).get("uuid"));
+		board.rollDice((UUID) ((JSONObject) board.getData().getJSONArray("players").get(2)).get("uuid"));
+		assertThat(board.getData().get("turn")).isEqualTo(0);
+	}
+@Test
+	public void Check_player_Move()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+			MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException {
+		Object initial = ((JSONObject) board.getData().getJSONArray("players").get(0)).getInt("position");
+		UUID uuid = (UUID) ((JSONObject) board.getData().getJSONArray("players").get(0)).get("uuid");
+		Object obj = board.rollDice(uuid);
+		Object msg = ((JSONObject) obj).get("message");
+		Object dice = ((JSONObject) obj).get("dice");
+		Object finalPosition = board.getData().getJSONArray("steps").getJSONObject((int) initial + (int) dice)
+				.get("target");
+		int h = (int) initial + (int) dice;
+		int a = ((JSONObject) board.getData().getJSONArray("steps").get(h)).getInt("type");
+		if (a == 0) {
+			assertThat(msg.toString()).isEqualTo("Player moved to " + finalPosition);
+		}
+ }
+@Test
+	public void Check_New_Position()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+			MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException {
+		((JSONObject) board.getData().getJSONArray("players").get(1)).put("position", 100);
+		Object d = ((JSONObject) board.getData().getJSONArray("players").get(0)).getInt("position");
+		UUID uuid = (UUID) ((JSONObject) board.getData().getJSONArray("players").get(0)).get("uuid");
+		Object obj = board.rollDice(uuid);
+		Object msg = ((JSONObject) obj).get("message");
+		if ((int) d >= 100) {
+			assertThat(msg.toString()).isEqualTo("Incorrect roll of dice. Player did not move");
+}
+	}
 }
