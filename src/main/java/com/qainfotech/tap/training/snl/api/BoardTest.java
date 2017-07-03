@@ -145,23 +145,23 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 	   	 UUID u = (UUID) board.getData().getJSONArray("players").getJSONObject(0).get("uuid");
 	      Integer pos = (Integer) board.data.getJSONArray("players").getJSONObject(0).get("position");
 	      Integer dice = board.rollDice(u).getInt("dice");
-	      Integer pos_a = board.data.getJSONArray("players").getJSONObject(0).getInt("position");
-	      Integer pos_e = pos+dice;
+	      Integer actual_pos = board.data.getJSONArray("players").getJSONObject(0).getInt("position");
+	      Integer expected_pos = pos+dice;
 	      Integer target = (Integer) board.data.getJSONArray("steps").getJSONObject(dice).get("target");
 	   assertTrue(dice<=6);
 	     Integer type = (Integer) board.data.getJSONArray("steps").getJSONObject(dice).get("type");
 	     if(type==0)
 	 	  {
-	 		 assertEquals(pos_e, target);
-	 		  System.out.println(" nothing");
+	 		 assertEquals( expected_pos, target);
+	 		  
 	 	  }
 	 	  if(type==1)
 	 	  {
-	 		  assertTrue(pos_e>target);
+	 		  assertTrue( expected_pos>target);
 	 	  }
 	 	  if(type==2)
 	 	  {
-	 		 assertTrue(pos_e<target);
+	 		 assertTrue( expected_pos<target);
 	 	  
 		
 	 }
