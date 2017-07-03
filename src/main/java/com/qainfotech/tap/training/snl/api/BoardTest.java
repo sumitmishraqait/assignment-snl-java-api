@@ -63,4 +63,39 @@ public void player_already_exist() throws FileNotFoundException, UnsupportedEnco
 		assertNotEquals(data1,data2);
 		
 	}
+	public void Player_Deleted()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+			MaxPlayersReachedExeption, IOException, NoUserWithSuchUUIDException, InvalidTurnException 
+{
+		UUID uuid = (UUID) board.getData().getJSONArray("players").getJSONObject(0).get("uuid");
+		board.deletePlayer(uuid);
+
+		assertThat(board.getData().length()).isEqualTo(3);
+
+	}
+@Test(expectedExceptions = InvalidTurnException.class)
+	public void to_Check_Invalid_Turn()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+			MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException
+{
+
+		board.rollDice((UUID) ((JSONObject) board.getData().getJSONArray("players").get(3)).get("uuid"));
+
+	}
+@Test
+	public void Check_Position_Is_Equal_Or_Not()
+			throws FileNotFoundException, UnsupportedEncodingException, PlayerExistsException, GameInProgressException,
+			MaxPlayersReachedExeption, IOException, InvalidTurnException, NoUserWithSuchUUIDException {
+		Object initial = ((JSONObject) board.getData().getJSONArray("players").get(0)).getInt("position");
+		UUID uuid = (UUID) ((JSONObject) board.getData().getJSONArray("players").get(0)).get("uuid");
+
+		Object dice = boardTest.rollDice(uuid).get("dice");
+		Object finalPosition = ((JSONObject) board.getData().getJSONArray("players").get(0)).getInt("position");
+		Object rolledDice = board.getData().getJSONArray("steps").getJSONObject((int) initial + (int) dice)
+				.get("target");
+
+		assertThat(rolledDice).isEqualTo(finalPosition);
+		int h = (int) finalPosition;
+		((JSONObject) board.getData().getJSONArray("steps").get(h)).getInt("type");
+}
 }
